@@ -21,7 +21,7 @@ from iterator import FSCS5Iterator
 class FSCS5Factory(BaseDatasetFactory):
 
     def __init__(self, storage_connector: StorageConnector):
-        self.raw_path = "fscs5/raw/"
+        self.raw_path = "fscs5/raw"
         self.preprocessed_path = "fscs5/preprocessed"
         import_path = os.path.join(os.getcwd(), "data", "dsets")
         self.resource_definitions = {
