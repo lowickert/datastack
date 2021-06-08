@@ -20,19 +20,19 @@ class MNISTFactory(BaseDatasetFactory):
         self.preprocessed_path = "mnist/preprocessed/"
         self.resource_definitions = {
             "train": [
-                ResourceDefinition(identifier=os.path.join(self.raw_path, "samples_train.gz"),
+                ResourceDefinition(identifier=os.path.join(self.raw_path, "samples_train.gz"), # 'mnist/raw/samples_train.gz'
                                    source='http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz',
                                    md5_sum="f68b3c2dcbeaaa9fbdd348bbdeb94873"),
-                ResourceDefinition(identifier=os.path.join(self.raw_path, "labels_train.gz"),
+                ResourceDefinition(identifier=os.path.join(self.raw_path, "labels_train.gz"), # 'mnist/raw/labels_train.gz'
                                    source='http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz',
                                    md5_sum="d53e105ee54ea40749a09fcbcd1e9432")
 
             ],
             "test": [
-                ResourceDefinition(identifier=os.path.join(self.raw_path, "samples_test.gz"),
+                ResourceDefinition(identifier=os.path.join(self.raw_path, "samples_test.gz"), # 'mnist/raw/samples_test.gz'
                                    source='http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
                                    md5_sum="9fb629c4189551a2d022fa330f9573f3"),
-                ResourceDefinition(identifier=os.path.join(self.raw_path, "targets.gz"),
+                ResourceDefinition(identifier=os.path.join(self.raw_path, "targets.gz"), # 'mnist/raw/targets.gz'
                                    source='http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz',
                                    md5_sum="ec29112dd5afa0611ce80d1b7f02629c")
             ]
@@ -46,7 +46,7 @@ class MNISTFactory(BaseDatasetFactory):
         return self.storage_connector.has_resource(sample_identifier)
 
     def _get_resource_id(self, data_type: str,  split: str, element: str) -> str:
-        return os.path.join("mnist", data_type, split, element)
+        return os.path.join("mnist", data_type, split, element) # 'mnist\\preprocessed\\train\\samples.pt'
 
     def _retrieve_raw(self):
         retrieval_jobs = [ResourceDefinition(identifier=resource_definition.identifier,
