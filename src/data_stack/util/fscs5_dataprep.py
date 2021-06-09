@@ -6,6 +6,7 @@ class Dset_converter():
 
     DSET_LOCATION = "/home/alad/data/fs_data"
     RAW_PATH = "/home/datastack/data/dsets"
+    MD5_FILE = "md5_checksums.txt"
 
     output_names = {
         "train" : {
@@ -49,8 +50,14 @@ class Dset_converter():
                 "targets": df_test.labels
             }
         }
-        
+
         # Store the resulting four datasets
+        md5_file = os.path.join(self.RAW_PATH, self.MD5_FILE)
+        print(md5_file)
+#        if not os.path.exists(md5_file):
+#            f.open(md5_file, 'w')
+#            f.close()
+#            print("MD5 file created")
         for dset in self.output_names.keys():
             print(dset)
             for key in self.output_names[dset].keys():
@@ -70,7 +77,10 @@ class Dset_converter():
                 with open(path, "rb") as f:
                     for chunk in iter(lambda: f.read(1024 * 1024), b""):
                         md5.update(chunk)
+                with open(md5_file, "a+") as f:
+                    f.write("{}_{}: {}\n".format(dset, key, md5.hexdigest()))
                 print(md5.hexdigest())
+
 
 if __name__ == "__main__":
     converter = Dset_converter()
