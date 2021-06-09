@@ -26,23 +26,23 @@ class FSCS5Factory(BaseDatasetFactory):
         import_path = os.path.join(os.getcwd(), "data", "dsets")
         self.resource_definitions = {
             "train": [
-                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_samples_train.hdf" ),
-                                    source=os.path.join(import_path, 'fscs5_samples_train.hdf'),
-                                    md5_sum="422f703d21223d980cffa7fbd07de37a"
+                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_samples_train.csv" ),
+                                    source=os.path.join(import_path, 'fscs5_samples_train.csv'),
+                                    md5_sum="4d5c50a0bb22a67a38bbf9a76744d20d"
                                     ),
-                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_targets_train.hdf"),
-                                    source=os.path.join(import_path, "fscs5_targets_train.hdf"),
-                                    md5_sum="7d9955f685dfdc105de9c1a57ee74f15"
+                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_targets_train.csv"),
+                                    source=os.path.join(import_path, "fscs5_targets_train.csv"),
+                                    md5_sum="30a767ec97c9406910aba1f0f076131b"
                                     )
             ],
             "test" : [
-                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_samples_test.hdf" ),
-                                    source=os.path.join(import_path, 'fscs5_samples_test.hdf'),
-                                    md5_sum="da9668db6c7e807e58f7d600665f162d"
+                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_samples_test.csv" ),
+                                    source=os.path.join(import_path, 'fscs5_samples_test.csv'),
+                                    md5_sum="fc518a7abe12969dc9dba65993ad559f"
                                     ),
-                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_targets_test.hdf"),
-                                    source=os.path.join(import_path, "fscs5_targets_test.hdf"),
-                                    md5_sum="d5eed7f83f99beaa833e0c7dee049e52"
+                ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_targets_test.csv"),
+                                    source=os.path.join(import_path, "fscs5_targets_test.csv"),
+                                    md5_sum="f06f0815d442a1b7d629120de56dc583"
                                     )
             ]
         }
@@ -106,5 +106,6 @@ if __name__ == "__main__":
     fscs5_factory = FSCS5Factory(storage_connector)
     fscs5_iterator = fscs5_factory.get_dataset_iterator(config={"split": "train"})
     measurement, target = fscs5_iterator[0]
-    print(measurement)
-    print(target)
+    print("Measurement: \n", measurement)
+    print(len(measurement))
+    print("Target: \n", target)

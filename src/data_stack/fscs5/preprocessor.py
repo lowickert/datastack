@@ -14,30 +14,27 @@ class FSCS5Preprocessor:
         self.storage_connector = storage_connector
 
     def preprocess(self, raw_sample_identifier: str, raw_target_identifier: str, sample_identifier: str, target_identifier: str):
-        with self._preprocess_sample_resource(raw_sample_identifier, sample_identifier) as sample_resource:
-            self.storage_connector.set_resource(identifier=sample_identifier, resource=sample_resource)
-            sample_resource.close()
-        with self._preprocess_target_resource(raw_target_identifier, target_identifier) as target_resource:
-            self.storage_connector.set_resource(identifier=target_identifier, resource=target_resource)
-            target_resource.close
-
-    def _torch_tensor_to_streamed_resource(self, identifier: str, tensor: torch.Tensor) -> StreamedResource:
-        buffer = io.BytesIO()
-        torch.save(tensor, buffer)
-        resource = ResourceFactory.get_resource(identifier=identifier, file_like_object=buffer)
-        return resource # Should be working
+        sample_df = self._preprocess_sample_resource(raw_sample_identifier, sample_identifier) 
+        target_df = self._preprocess_target_resource(raw_target_identifier, target_identifier) 
+        sample_resource = self._df_to_streamed_recourse(sample_identifier, sample_df)
+        target_resource = self._df_to_streamed_recourse(target_identifier, target_df)
+        self.storage_connector.set_resource(sample_identifier, sample_resource)
+        self.storage_connector.set_resource(target_identifier, target_resource)
 
     def _preprocess_sample_resource(self, raw_identifier: str, prep_identifier: str) -> StreamedResource:
         with self.storage_connector.get_resource(raw_identifier, ResourceFactory.SupportedStreamedResourceTypes.STREAMED_TEXT_RESOURCE) as raw_resource:
-            data = pd.read_hdf(raw_resource)
-        resource = self._torch_tensor_to_streamed_resource(prep_identifier, data)
-        return resource
+            data = pd.read_csv(raw_resource)
+        return data
 
     def _preprocess_target_resource(self, raw_identifier: str, prep_identifier: str) -> StreamedResource:
         with self.storage_connector.get_resource(raw_identifier) as raw_resource:
-            data = raw_resource.read()
-        data = np.frombuffer(data, dtype=np.int64)
-        resource = self._torch_tensor_to_streamed_resource(prep_identifier, data)
+            data = pd.read_csv(raw_resource)
+        return data
+
+    def _df_to_streamed_recourse(self, identifier: str, df: pd.DataFrame) -> StreamedResource:
+        string_buffer = io.StringIO()
+        df.to_csv(path_or_buf=string_buffer, index=False)
+        string_buffer.seek(0)
+        byte_buffer = io.BytesIO(string_buffer.read().encode('utf8'))
+        resource = ResourceFactory.get_resource(identifier=identifier, file_like_object=byte_buffer)
         return resource
-    
-    # TODO: Decode Binary Resource to decimal resource to do preprocessing
