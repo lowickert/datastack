@@ -28,21 +28,21 @@ class FSCS5Factory(BaseDatasetFactory):
             "train": [
                 ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_samples_train.hdf" ),
                                     source=os.path.join(import_path, 'fscs5_samples_train.hdf'),
-                                    md5_sum="TODO"
+                                    md5_sum="422f703d21223d980cffa7fbd07de37a"
                                     ),
                 ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_targets_train.hdf"),
                                     source=os.path.join(import_path, "fscs5_targets_train.hdf"),
-                                    md5_sum="TODO"
+                                    md5_sum="7d9955f685dfdc105de9c1a57ee74f15"
                                     )
             ],
             "test" : [
                 ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_samples_test.hdf" ),
                                     source=os.path.join(import_path, 'fscs5_samples_test.hdf'),
-                                    md5_sum="TODO"
+                                    md5_sum="da9668db6c7e807e58f7d600665f162d"
                                     ),
                 ResourceDefinition( identifier=os.path.join(self.raw_path, "fscs5_targets_test.hdf"),
                                     source=os.path.join(import_path, "fscs5_targets_test.hdf"),
-                                    md5_sum="TODO"
+                                    md5_sum="d5eed7f83f99beaa833e0c7dee049e52"
                                     )
             ]
         }
@@ -82,6 +82,8 @@ class FSCS5Factory(BaseDatasetFactory):
             self._retrieve_raw()
             for s in splits:
                 self._prepare_split(s)
+        
+        # TODO
 
     def get_dataset_iterator(self, config: Dict[str, Any] = None) -> Tuple[DatasetIteratorIF, IteratorMeta]:
         return self._get_iterator(**config) # Translates to split : train --> Argument name

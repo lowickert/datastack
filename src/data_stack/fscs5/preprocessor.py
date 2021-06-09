@@ -4,3 +4,5 @@ class FSCS5Preprocessor:
 
     def __init__(self, storage_connector: StorageConnector):
         self.storage_connector = storage_connector
+
+    # TODO: Eliminate NaNs
