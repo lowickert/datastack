@@ -58,6 +58,9 @@ class FSCS5Factory(BaseDatasetFactory):
         return self.storage_connector.has_resource(sample_identifier)
 
     def _retrieve_raw(self):
+        '''
+            Data is correctly stored. Hdf5 can be read by Pandas without a problem.
+        '''
         retrieval_jobs =    [ResourceDefinition(identifier=resource_definition.identifier,
                                                 source=resource_definition.source,
                                                 md5_sum=resource_definition.md5_sum)
@@ -70,20 +73,27 @@ class FSCS5Factory(BaseDatasetFactory):
         preprocessor = FSCS5Preprocessor(self.storage_connector)
         sample_identifier = self._get_resource_id(data_type="preprocessed", split=split, element="samples.pt")
         target_identifier = self._get_resource_id(data_type="preprocessed", split=split, element="targets.pt")
-        preprocessor.preprocess(*[r.identifier for r in self.resource_definitions[split]],  # Split
+        preprocessor.preprocess(*[r.identifier for r in self.resource_definitions[split]],  # Split --> Identifier samples, identifier targets
                                 sample_identifier=sample_identifier,                        # Location samples
                                 target_identifier=target_identifier)                        # Location targets
 
     def _get_iterator(self, split: str) -> DatasetIteratorIF:
         splits = self.resource_definitions.keys()
+        print("Splits loaded")
         if split not in splits:
             raise ResourceNotFoundError(f"Split {split} is not defined.")
         if not self.check_exists():
             self._retrieve_raw()
+            print("Raw data is loaded")
             for s in splits:
                 self._prepare_split(s)
+                print("Split {} is prepared".format(s))
         
-        # TODO
+        sample_identifier = self._get_resource_id(data_type="preprocessed", split=split, element="samples.pt")
+        target_identifier = self._get_resource_id(data_type="preprocessed", split=split, element="targets.pt")
+        sample_resource = self.storage_connector.get_resource(identifier=sample_identifier)
+        target_resource = self.storage_connector.get_resource(identifier=target_identifier)
+        return FSCS5Iterator(sample_resource, target_resource)
 
     def get_dataset_iterator(self, config: Dict[str, Any] = None) -> Tuple[DatasetIteratorIF, IteratorMeta]:
         return self._get_iterator(**config) # Translates to split : train --> Argument name
@@ -95,6 +105,6 @@ if __name__ == "__main__":
 
     fscs5_factory = FSCS5Factory(storage_connector)
     fscs5_iterator = fscs5_factory.get_dataset_iterator(config={"split": "train"})
-    img, target = mnist_iterator[0]
-    plt.imshow(img)
-    plt.show()
+    measurement, target = fscs5_iterator[0]
+    print(measurement)
+    print(target)
