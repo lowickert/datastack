@@ -10,12 +10,12 @@ class Dset_converter():
 
     output_names = {
         "train" : {
-            "samples" : "fscs5_samples_train.hdf",
-            "targets" : "fscs5_targets_train.hdf"
+            "samples" : "fscs5_samples_train.csv",
+            "targets" : "fscs5_targets_train.csv"
         },
         "test" : {
-            "samples" : "fscs5_samples_test.hdf",
-            "targets" : "fscs5_targets_test.hdf"
+            "samples" : "fscs5_samples_test.csv",
+            "targets" : "fscs5_targets_test.csv"
         }
     }
 
@@ -54,10 +54,6 @@ class Dset_converter():
         # Store the resulting four datasets
         md5_file = os.path.join(self.RAW_PATH, self.MD5_FILE)
         print(md5_file)
-#        if not os.path.exists(md5_file):
-#            f.open(md5_file, 'w')
-#            f.close()
-#            print("MD5 file created")
         for dset in self.output_names.keys():
             print(dset)
             for key in self.output_names[dset].keys():
@@ -69,7 +65,7 @@ class Dset_converter():
                     print(os.path.join(self.RAW_PATH, location))
                     print(data.head())
                     print("Length = ", len(data))
-                data.to_hdf(path, key='data')
+                data.to_csv(path)
                 print("Stored {}_{} to {}".format(dset, key, path))
 
                 # Calculate md5 of hdf files
