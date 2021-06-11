@@ -25,6 +25,9 @@ class Dset_converter():
     def convert_dataset(self, verbose=False):
         # Load dataset
         df = pd.read_hdf(os.path.join(self.DSET_LOCATION, self.input_name))
+        len_df = len(df)
+        df = df.dropna()
+        print("{} rows were dropped when dropping NaNs".format(len_df - len(df)))
 
         # Separate Normal / Anomalous data
         df_normal = df.loc[df["labels"] == 0]
