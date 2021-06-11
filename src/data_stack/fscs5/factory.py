@@ -2,14 +2,12 @@
 
 import os
 import data_stack
-from matplotlib import pyplot as plt
-from typing import Tuple, Dict, Any
+from typing import Dict, Any
 
 from data_stack.io.storage_connectors import StorageConnector, FileStorageConnector
 from data_stack.dataset.factory import BaseDatasetFactory
 from data_stack.io.resource_definition import ResourceDefinition
 from data_stack.dataset.iterator import DatasetIteratorIF
-from data_stack.dataset.meta import IteratorMeta
 from data_stack.io.retriever import RetrieverFactory
 
 from preprocessor import FSCS5Preprocessor
@@ -95,7 +93,7 @@ class FSCS5Factory(BaseDatasetFactory):
         target_resource = self.storage_connector.get_resource(identifier=target_identifier)
         return FSCS5Iterator(sample_resource, target_resource)
 
-    def get_dataset_iterator(self, config: Dict[str, Any] = None) -> Tuple[DatasetIteratorIF, IteratorMeta]:
+    def get_dataset_iterator(self, config: Dict[str, Any] = None) -> DatasetIteratorIF:
         return self._get_iterator(**config) # Translates to split : train --> Argument name
 
 if __name__ == "__main__":
@@ -105,7 +103,7 @@ if __name__ == "__main__":
 
     fscs5_factory = FSCS5Factory(storage_connector)
     fscs5_iterator = fscs5_factory.get_dataset_iterator(config={"split": "train"})
-    measurement, target = fscs5_iterator[0]
+    measurement, target = fscs5_iterator[5]
     print("Measurement: \n", measurement)
     print(len(measurement))
     print("Target: \n", target)

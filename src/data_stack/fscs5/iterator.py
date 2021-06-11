@@ -18,4 +18,4 @@ class FSCS5Iterator(DatasetIterator):
     def __getitem__(self, index:int):
         sample_tensor = self.samples.iloc[index].to_numpy()
         target = self.targets.iloc[index].to_numpy()
-        return sample_tensor, target
+        return sample_tensor, target # Is tag and target needed for ATA or is target sufficient?
